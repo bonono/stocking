@@ -1,0 +1,25 @@
+{
+  "name": "Stocking",
+  "version": "0.1.0",
+  "author": "bonono",
+  "description": "Qiitaでストックした記事をChromeの検索バーから検索できるようにするChrome拡張",
+  "scripts": {
+    "test": "./node_modules/karma/bin/karma start karma.conf.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bonono/stocking"
+  },
+  "dependencies": {
+    "coffee-script": ">= 1.8.0"
+  },
+  "devDependencies": {
+    "karma": "~0.12.28",
+    "karma-coffee-preprocessor": "~0.2.1",
+    "jasmine-core": "~2.1.3",
+    "karma-jasmine": "~0.3.2",
+    "karma-phantomjs-launcher": "~0.1.4",
+    "jasmine-jquery": "~2.0.5",
+    "karma-jasmine-jquery": "~0.1.1"
+  }
+}

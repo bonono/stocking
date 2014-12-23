@@ -1,0 +1,14 @@
+{
+   "name"             : "Stocking",
+   "description"      : "Qiitaでストックした記事をChromeの検索バーから検索できるようにするChrome拡張",
+   "version"          : "0.1",
+   "manifest_version" : 2,
+   "omnibox": {
+      "keyword": "qi"
+   },
+   "background": {
+      "persistent" : true,
+      "scripts"    : [
+      ]
+   }
+}

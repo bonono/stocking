@@ -6,7 +6,9 @@ module.exports = function(config) {
       browsers: ['PhantomJS'],
       frameworks: ['jasmine-jquery', 'jasmine'],
 
-      exclude: [ ],
+      exclude: [
+         'script/coffee/bootstrap.coffee',
+      ],
       files: [
          'script/coffee/define.coffee',
          'test/mocks/**/*.coffee',

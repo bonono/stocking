@@ -1,0 +1,6 @@
+{
+   "stocks_api"              : "http://qiita.com/api/v2/users/:user_id/stocks",
+   "stocks_per_request"      : 20,
+   "user_id_key"             : "user-id",
+   "update_interval_minutes" : 30
+}

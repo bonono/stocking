@@ -4,15 +4,16 @@
    "version"          : "0.1",
    "manifest_version" : 2,
    "omnibox": {
-      "keyword": "qi"
+      "keyword": "q"
    },
    "background": {
       "persistent" : true,
       "scripts"    : [
          "script/js/define.js",
+         "script/js/utils.js",
          "script/js/config/static.js",
          "script/js/config/dynamic.js",
-         "script/js/string_array.js",
+         "script/js/stock_library.js",
          "script/js/request.js",
          "script/js/stock_downloader.js",
          "script/js/stocks.js",

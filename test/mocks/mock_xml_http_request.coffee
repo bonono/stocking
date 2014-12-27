@@ -42,8 +42,10 @@ class MockXMLHttpRequest
    setResponseHeader: ( key, value ) ->
       @_responseHeader[ key ] = value
 
-   resume: ( ) ->
-      @readyState = 4
-      setTimeout @onreadystatechange, 0
+   resume: ( delay = 0 ) ->
+      setTimeout ( =>
+         @readyState = 4
+         @onreadystatechange( ) 
+      ), delay
 
 define 'mocks', MockXMLHttpRequest

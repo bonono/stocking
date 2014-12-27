@@ -11,11 +11,17 @@ class MockChromeStorageLocal
    @setDirect: ( data ) ->
       _storage[ k ] = v for k, v of data
 
+   @getDirect: ( key = null ) ->
+      if key? then _storage[ key ] else _storage
+
+   @clear: ( ) ->
+      _storage = { }
+
    @get: ( keys, callback ) ->
       keys = [ keys ] if Object.prototype.toString.call( keys ) isnt '[object Array]'
+
       read = { }
-      for k in keys
-         read[ k ] = if _storage[ k ]? then _storage[ k ] else null
+      read[ k ] = _storage[ k ] for k in keys when _storage[ k ]?
 
       chrome.runtime.lastError = if _raiseError then 'TEST ERROR' else ''
       _raiseError = false

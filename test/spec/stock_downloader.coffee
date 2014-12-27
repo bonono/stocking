@@ -135,3 +135,17 @@ describe 'stocking.StockDownloaderクラスのテスト', ( done ) ->
       mock.setStatus 500
       mock.setResponse JSON.stringify( [ 'A', 'B', 'C' ] )
       mock.resume 50
+
+   it 'ユーザー設定なし状態でのテスト', ( done ) ->
+
+      mock = new mocks.MockXMLHttpRequest
+      req  = new stocking.Request mock
+
+      chrome.storage.local.clear( )
+      stocking.StockDownloader.start 1, ( page, stocks ) ->
+         expect( page ).toBe 1
+         expect( stocks ).toBeNull( )
+         done( )
+      , req
+
+      mock.resume 50

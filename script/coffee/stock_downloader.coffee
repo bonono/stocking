@@ -14,8 +14,12 @@ class StockDownloader
          else
             etag = if read[ etagKey ]? then read[ etagKey ] else ''
 
-         url = stocking.config.Static.StocksApi
-         url = url.replace ':user_id', stocking.config.Dynamic.get( stocking.config.Static.UserIdKey )
+         user = stocking.config.Dynamic.get( stocking.config.Static.UserIdKey )
+         unless user?
+            setTimeout ( -> callback page, null ), 0
+            return
+
+         url  = stocking.config.Static.StocksApi.replace ':user_id', user
 
          params = ( page: page, per_page: stocking.config.Static.StocksPerRequest )
 

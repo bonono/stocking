@@ -1,11 +1,20 @@
 'use strict'
 
+defineAs 'stocking', 'Healthful', false
+defineAs 'stocking', 'waitLaunching', ( callback ) ->
+   timer = setInterval ( ->
+      if stocking.Healthful
+         clearInterval timer
+         callback( )
+   ), 50
+
 # 各種設定ファイルの読み込み
 stocking.config.Static.load ( success ) ->
    return unless success
    stocking.config.Dynamic.load ( success ) ->
       return unless success
-      stocking.Stocks.setup( )
+      stocking.Stocks.setup ( success ) ->
+         stocking.Healthful = success
 
 chrome.omnibox.onInputStarted.addListener ( ) ->
    chrome.omnibox.setDefaultSuggestion ( description: 'Qiitaでストックを検索' )

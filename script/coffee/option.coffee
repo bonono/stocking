@@ -29,15 +29,15 @@ onClickedSave = ( ) ->
             $( document.user.save ).removeAttr 'disabled'
             if user?
 
-               # ユーザー情報とストックを更新
-               core.stocking.Utils.setUser user.id
-               core.stocking.Stocks.update true
-
                view = $( '#profile' )
                view.find( 'img' ).attr 'src', user.profile_image_url
                view.find( '.name' ).text user.id
                view.find( '.description' ).text user.description
                view.fadeIn 100
+
+               # ユーザー情報とストックを更新
+               core.stocking.Utils.setUser user.id
+               core.stocking.Stocks.update true, ( -> setTimeout ( -> view.fadeOut 100 ), 3000 )
             else
                $( '#not-found' ).fadeIn 100
 

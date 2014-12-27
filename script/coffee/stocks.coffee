@@ -23,7 +23,7 @@ class Stocks
                if alarm.name is 'observing'
                   stocking.waitLaunching ( -> Stocks.update( ) )
 
-   @update: ( needNotifying = false ) ->
+   @update: ( needNotifying = false, completedCallback = null ) ->
       currentUser = stocking.Utils.getUser( )
 
       acc = [ ]
@@ -48,6 +48,8 @@ class Stocks
                         title   : 'ストック更新完了のお知らせ'
                         message : currentUser + 'さんのストックの初期設定が完了しました'
                      ), ( -> )
+
+                  completedCallback( ) if completedCallback?
 
          else
             return # null(失敗)だった場合は中断

@@ -6,6 +6,9 @@
    "omnibox": {
       "keyword": "q"
    },
+   "icons": {
+      "16": "resource/icon16.png"
+   },
    "background": {
       "persistent" : true,
       "scripts"    : [

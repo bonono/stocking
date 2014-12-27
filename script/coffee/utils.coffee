@@ -11,4 +11,7 @@ class Utils
    @setUser: ( userId ) ->
       stocking.config.Dynamic.set stocking.config.Static.UserIdKey, userId
 
+   @hasApiError: ( ) ->
+      chrome.runtime.lastError? and chrome.runtime.lastError isnt ''
+
 define 'stocking', Utils

@@ -30,8 +30,8 @@ onClickedSave = ( ) ->
             if user?
 
                # ユーザー情報とストックを更新
-               core.stocking.Util.setUser user.id
-               core.stocking.stocks.update true
+               core.stocking.Utils.setUser user.id
+               core.stocking.Stocks.update true
 
                view = $( '#profile' )
                view.find( 'img' ).attr 'src', user.profile_image_url
@@ -56,4 +56,8 @@ $ ( ) ->
    chrome.runtime.getBackgroundPage ( window ) ->
       core = window
       core.stocking.waitLaunching ( ) ->
+         if ( user = core.stocking.Utils.getUser( ) )?
+            document.user.name.value = user
+            $( document.user.save ).removeAttr 'disabled'
+
          $( '#loading' ).fadeOut 400

@@ -41,6 +41,14 @@ class Stocks
                   _stocks = acc
                   chrome.storage.local.set ( stocks: _stocks )
 
+                  if needNotifying
+                     chrome.notifications.create 'stocks-updated', (
+                        type    : 'basic'
+                        iconUrl : '/resource/icon48.png'
+                        title   : 'ストック更新完了のお知らせ'
+                        message : currentUser + 'さんのストックの初期設定が完了しました'
+                     ), ( -> )
+
          else
             return # null(失敗)だった場合は中断
 

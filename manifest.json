@@ -9,6 +9,20 @@
    "background": {
       "persistent" : true,
       "scripts"    : [
+         "script/js/define.js",
+         "script/js/config/static.js",
+         "script/js/config/dynamic.js",
+         "script/js/string_array.js",
+         "script/js/request.js",
+         "script/js/stock_downloader.js",
+         "script/js/stocks.js",
+         "script/js/bootstrap.js"
       ]
-   }
+   },
+   "permissions": [
+      "storage",
+      "alarms",
+      "unlimitedStorage",
+      "http://qiita.com/api/v2/users/*"
+   ]
 }

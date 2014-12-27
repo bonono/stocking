@@ -8,8 +8,9 @@ module.exports = function(config) {
 
       exclude: [ ],
       files: [
-         'script/coffee/stocking.coffee',
+         'script/coffee/define.coffee',
          'script/coffee/**/*.coffee',
+         'test/mocks/**/*.coffee',
          'test/spec/**/*.coffee',
          { pattern: 'test/fixture/**/*', included: false }
       ],

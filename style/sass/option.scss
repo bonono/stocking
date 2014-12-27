@@ -1,0 +1,136 @@
+$WIDTH: 900px;
+
+* {
+   padding: 0;
+   margin: 0;
+}
+
+html, body {
+   width: 100%;
+}
+
+#header {
+   padding: 10px 0;
+   border-bottom: solid 1px #DEE5D8;
+
+   h1 {
+      text-align: center;
+      color: #5CC30C;
+      width: $WIDTH;
+      font-size: 24px;
+      font-weight: normal;
+      line-height: 1;
+      margin: 0 auto 0 auto;
+   }
+}
+
+#content {
+   width: $WIDTH;
+   padding-top: 20px;
+   margin: 0 auto 0 auto;
+   text-align: center;
+
+   form {
+      label {
+         font-size: 13px;
+         color: #444;
+         font-weight: bold;
+         padding-right: 5px;
+      }
+
+      input {
+         font-size: 14px;
+         width: 200px;
+         padding: 8px;
+         border: solid 1px #AAA;
+         border-radius: 2px;
+      }
+
+      button {
+         color: white;
+         font-size: 13px;
+         font-weight: bold;
+         padding: 8px 20px;
+         border-radius: 3px;
+         border: solid 1px rgb( 8, 171, 8 );
+         background-color: rgb( 19, 197, 62 );
+
+         &[ disabled ] {
+            opacity: 0.5;
+         }
+
+         &:hover:not( [ disabled ] ) {
+            border-color: #0A830A;
+            background-color: #199B39;
+            cursor: pointer;
+         }
+      }
+   }
+}
+
+#checking {
+   font-size: 20px;
+   color: #DDD;
+   padding: 40px;
+   text-align: center;
+   display: none;
+}
+
+#profile {
+   width: 500px;
+   margin: 30px auto 0 auto;
+   padding: 20px;
+   background-color: #F7F7F4;
+   border: solid 1px #DDDDD3;
+   border-radius: 5px;
+   display: none;
+
+   > p {
+      font-size: 13px;
+      font-weight: bold;
+      color: rgb( 136, 134, 100 );
+      padding-bottom: 20px;
+   }
+
+   .content {
+      display: -webkit-box;
+
+      > div {
+         margin-left: 10px;
+      }
+   }
+
+   img {
+      width: 80px;
+      height: 80px;
+      display: block;
+   }
+
+   .name {
+      color: #333;
+      font-size: 17px;
+      font-weight: bold;
+      text-align: left;
+      line-height: 1;
+      margin: 10px 0 0 0;
+      word-wrap: break-word;
+      width: 410px;
+   }
+
+   .description {
+      text-align: left;
+      line-height: 1.3;
+      margin: 10px 0 0 0;
+      word-wrap: break-word;
+      width: 410px;
+   }
+}
+
+#not-found {
+   padding: 40px 0;
+   text-align: center;
+   font-size: 16px;
+   font-weight: bold;
+   color: #FF517F;
+   display: none;
+}

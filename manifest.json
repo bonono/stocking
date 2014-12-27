@@ -10,6 +10,7 @@
       "16": "resource/icon16.png",
       "48": "resource/icon48.png"
    },
+   "options_page": "html/option.html",
    "background": {
       "persistent" : true,
       "scripts"    : [

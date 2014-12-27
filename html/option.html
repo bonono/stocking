@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Stocking option</title>
+      <meta charset="utf-8" />
+      <link rel="stylesheet" type="text/css" href="/style/css/option.css" />
+      <script type="text/javascript" src="/lib/jquery-2.1.3.min.js"></script>
+      <script type="text/javascript" src="/script/js/option.js"></script>
+   </head>
+   <body>
+      <div id="header">
+         <h1>Stocking option</h1>
+      </div>
+      <div id="content">
+
+         <form name="user">
+            <label for="label-user-name">ユーザーIDの設定: </label>
+            <input type="text" name="name" id="label-user-name" />
+            <button name="save" type="button" disabled>保存</button>
+         </form>
+
+         <div id="profile">
+            <p>ユーザーIDを確認しました。ストックの反映まで今しばらくお待ちください</p>
+            <div class="content">
+               <img src="" /> 
+               <div>
+                  <p class="name"></p>
+                  <p class="description"></p>
+               </div>
+            </div>
+         </div>
+
+         <p id="checking">ユーザーを確認中です...</p>
+         <p id="not-found">指定のユーザーは見つかりませんでした</p>
+
+      </div>
+   </body>
+</body>

@@ -1,3 +1,4 @@
 node_modules/
 script/js/
-
+style/.sass-cache/
+style/css/*.map

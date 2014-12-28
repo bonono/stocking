@@ -52,7 +52,7 @@ class Stocks
                   completedCallback( ) if completedCallback?
 
          else
-            return # null(失敗)だった場合は中断
+            completedCallback( ) if completedCallback? # null(失敗)だった場合は中断
 
       stocking.StockDownloader.start 1, callback
 

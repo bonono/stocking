@@ -7,8 +7,9 @@
       "keyword": "q"
    },
    "icons": {
-      "16": "resource/icon16.png",
-      "48": "resource/icon48.png"
+      "16"  : "resource/icon16.png",
+      "48"  : "resource/icon48.png",
+      "128" : "resource/icon128.png"
    },
    "options_page": "html/option.html",
    "background": {

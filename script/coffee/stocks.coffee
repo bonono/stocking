@@ -44,7 +44,7 @@ class Stocks
                   if needNotifying
                      chrome.notifications.create 'stocks-updated', (
                         type    : 'basic'
-                        iconUrl : '/resource/icon48.png'
+                        iconUrl : '/resource/icon128.png'
                         title   : 'ストック更新完了のお知らせ'
                         message : currentUser + 'さんのストックの初期設定が完了しました'
                      ), ( -> )

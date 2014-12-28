@@ -61,3 +61,9 @@ $ ( ) ->
             $( document.user.save ).removeAttr 'disabled'
 
          $( '#loading' ).fadeOut 400
+
+   # 応急用としてコンソールから叩けば全データがリセットされるようにする
+   window.StockingDataClear = ( ) ->
+      if window.confirm 'Stockingの全データを削除します. よろしいですか?(Qiitaでのストックは解除されません)'
+         core.stocking.clearAllData( )
+

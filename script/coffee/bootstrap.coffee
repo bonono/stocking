@@ -8,6 +8,11 @@ defineAs 'stocking', 'waitLaunching', ( callback ) ->
          callback( )
    ), 50
 
+# 応急用機能
+defineAs 'stocking', 'clearAllData', ( ) ->
+   chrome.storage.local.clear ( ) ->
+      chrome.runtime.reload( )
+
 # 各種設定ファイルの読み込み
 stocking.config.Static.load ( success ) ->
    return unless success

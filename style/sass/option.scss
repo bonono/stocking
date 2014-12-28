@@ -20,11 +20,11 @@ html, body {
 
 #header {
    padding: 10px 0;
-   border-bottom: solid 1px #DEE5D8;
+   border-bottom: solid 1px #DDD;
 
    h1 {
       text-align: center;
-      color: #5CC30C;
+      color: #5FBB18;
       width: $WIDTH;
       font-size: 24px;
       font-weight: normal;
@@ -142,4 +142,27 @@ html, body {
    font-weight: bold;
    color: #FF517F;
    display: none;
+}
+
+#footer {
+   width: 100%;
+   position: fixed;
+   bottom: 0;
+   background-color: white;
+   border-top: solid 1px #DDD;
+   opacity: 0.8;
+   text-align: center;
+   padding: 20px 0;
+   font-size: 13px;
+   font-weight: bold;
+   color: #666;
+
+   a {
+      text-decoration: none;
+      color: rgb( 74, 187, 74 );
+      
+      &:hover {
+         color: rgb( 3, 105, 3 );
+      }
+   }
 }

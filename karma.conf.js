@@ -8,6 +8,7 @@ module.exports = function(config) {
 
       exclude: [
          'script/coffee/bootstrap.coffee',
+         'script/coffee/option.coffee'
       ],
       files: [
          'script/coffee/define.coffee',

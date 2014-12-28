@@ -49,7 +49,7 @@ class StockDownloader
             else if response.status is 304
                # ETagに変更がないならローカルに保存してあるレスポンスを返却
                chrome.storage.local.get "response-page-#{page}", ( read ) ->
-                  if stocking.Utils.hasApiError( )
+                  if stocking.Utils.hasApiError( ) or not read[ "response-page-#{page}" ]?
                      callback page, null
                   else
                      callback page, JSON.parse( read[ "response-page-#{page}" ] )

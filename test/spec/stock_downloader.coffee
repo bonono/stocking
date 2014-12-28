@@ -87,6 +87,7 @@ describe 'stocking.StockDownloaderクラスのテスト', ( done ) ->
 
          setTimeout ( ->
             expect( chrome.storage.local.getDirect 'etag-page-1' ).toBe 'hogehoge'
+            expect( chrome.storage.local.getDirect 'response-page-1' ).toBe JSON.stringify( [ 'A', 'B', 'C' ] )
             done( )
          ), 10
       , req
@@ -103,6 +104,7 @@ describe 'stocking.StockDownloaderクラスのテスト', ( done ) ->
 
       data = { }
       data[ 'etag-page-1' ] = 'old'
+      data[ 'response-page-1' ] = JSON.stringify( [ 'A', 'B', 'C' ] )
       chrome.storage.local.setDirect data
 
       stocking.StockDownloader.start 1, ( page, stocks ) ->
@@ -112,13 +114,13 @@ describe 'stocking.StockDownloaderクラスのテスト', ( done ) ->
 
          setTimeout ( ->
             expect( chrome.storage.local.getDirect 'etag-page-1' ).toBe 'old'
+            expect( stocks ).toEqual  [ 'A', 'B', 'C' ] 
             done( )
          ), 10
       , req
 
       mock.setStatus 304
-      mock.setResponse JSON.stringify( [ 'A', 'B', 'C' ] )
-      mock.setResponseHeader 'ETag', 'new'
+      mock.setResponseHeader 'ETag', 'new' # 上書きしていないことを確認するために返してみる(本来は返らない)
       mock.resume 50 
 
    it 'レスポンスエラー', ( done ) ->

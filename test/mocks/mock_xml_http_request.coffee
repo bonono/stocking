@@ -29,6 +29,14 @@ class MockXMLHttpRequest
       @readyState = 3
       @onreadystatechange( )
 
+   abort: ( delay = 0 ) ->
+      throw new Error 'You can call abort function when readyState is 3' if @readyState isnt 3
+      setTimeout (
+         @readyState = 4
+         @status = 0
+         @onreadystatechange( )
+      ), 
+
    # 以下モック用のメソッド
    # send後に以下メソッドを使って値を検証できる
    setStatus: ( @status ) ->

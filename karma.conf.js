@@ -14,8 +14,7 @@ module.exports = function(config) {
          'script/coffee/define.coffee',
          'test/mocks/**/*.coffee',
          'script/coffee/**/*.coffee',
-         'test/spec/**/*.coffee',
-         { pattern: 'test/fixture/**/*', included: false }
+         'test/spec/**/*.coffee'
       ],
 
       preprocessors: {

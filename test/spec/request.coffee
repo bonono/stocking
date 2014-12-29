@@ -55,3 +55,12 @@ describe 'stocking.Requestクラスのテスト', ( ) ->
       mock.setStatus 404
       mock.setResponse 'not found'
       mock.resume( )
+
+   it '中断テスト', ( done ) ->
+      mock = new mocks.MockXMLHttpRequest
+      req = new stocking.Request mock
+      req.start 'http://test', { }, ( res ) ->
+         expect( res.status ).toBe 0
+         done( )
+
+      req.abort( )

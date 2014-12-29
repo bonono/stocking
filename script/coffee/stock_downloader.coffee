@@ -22,7 +22,7 @@ class StockDownloader
             return
 
          url = stocking.config.Static.StocksApi.replace ':user_id', user
-         timeout = ( stocking.config.Static.UpdateIntervalMinutes - 1 ) * 60 * 100 # タイムアウトは次の1分前まで
+         timeout = ( stocking.config.Static.UpdateIntervalMinutes - 1 ) * 60 * 1000 # タイムアウトは次の1分前まで
 
          # 前のリクエストがまだあるなら中断しておく
          currentRequest.abort( ) if currentRequest?

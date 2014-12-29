@@ -19,7 +19,7 @@ class Request
    setHeader: ( key, value ) ->
       @_headers[ key ] = value
 
-   start: ( url, params, callback = null ) ->
+   start: ( url, params, callback = null, timeout = null) ->
       @_url = @_buildUrl url, params
       
       @_xhr.open 'GET', @_url, true
@@ -27,7 +27,11 @@ class Request
          callback ( new Response @_xhr ) if @_xhr.readyState is 4
 
       @_xhr.setRequestHeader k, v for k, v of @_headers
+      @_xhr.timeout = timeout if timeout?
       @_xhr.send( )
+
+   abort: ( ) ->
+      @_xhr.abort( )
 
    _buildUrl: ( url, params ) ->
       queryString = ( "#{k}=#{v}" for k, v of params ).join "&"

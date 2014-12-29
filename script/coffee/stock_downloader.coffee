@@ -1,5 +1,7 @@
 'use strict'
 
+currentRequest = null
+
 # ストックをDLするクラス
 class StockDownloader
 
@@ -20,9 +22,15 @@ class StockDownloader
             return
 
          url = stocking.config.Static.StocksApi.replace ':user_id', user
+         timeout = ( stocking.config.Static.UpdateIntervalMinutes - 1 ) * 60 * 100 # タイムアウトは次の1分前まで
+
+         # 前のリクエストがまだあるなら中断しておく
+         currentRequest.abort( ) if currentRequest?
+         currentRequest = requestInstance
 
          requestInstance.setHeader 'If-None-Match', etag
          requestInstance.start url, { }, ( response ) ->
+            currentRequest = null
 
             if response.status is 200
 
@@ -53,5 +61,7 @@ class StockDownloader
                      callback JSON.parse( read[ 'response-v1' ] )
             else
                callback null
+
+         , timeout
 
 define 'stocking', StockDownloader

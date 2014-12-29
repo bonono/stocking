@@ -41,7 +41,7 @@ chrome.omnibox.onInputChanged.addListener ( text, suggest ) ->
    chrome.omnibox.setDefaultSuggestion ( description: defaultText )
 
    lib     = new stocking.StockLibrary stocking.Stocks.getAll( )
-   matched = lib.search text
+   matched = lib.search( text ).slice 0, 5 # 最高5件
 
    suggested = [ ]
    for stock in matched

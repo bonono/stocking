@@ -16,9 +16,11 @@ class Stocks
    @startObserving: ( ) ->
       Stocks.update( )
       chrome.alarms.get 'observing', ( alarm ) ->
-         if alarm is null
+         if not alarm?
             interval = stocking.config.Static.UpdateIntervalMinutes
             chrome.alarms.create 'observing', ( delayInMinutes: interval, periodInMinutes: interval )
+
+         if not chrome.alarms.onAlarm.hasListeners( )
             chrome.alarms.onAlarm.addListener ( alarm ) ->
                if alarm.name is 'observing'
                   stocking.waitLaunching ( -> Stocks.update( ) )

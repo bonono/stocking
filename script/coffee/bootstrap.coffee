@@ -58,24 +58,28 @@ chrome.omnibox.onInputChanged.addListener ( text, suggest ) ->
 
    suggest suggested
 
+getSelectedTab = ( callback ) ->
+   chrome.tabs.query ( currentWindow: true, highlighted: true ), ( tabs ) ->
+      # タブがないことはないはずだが, ない場合はコールバックが呼ばれない
+      callback tabs[ 0 ] if tabs.length > 0
+
 # 確定時のイベントハンドラ
 chrome.omnibox.onInputEntered.addListener ( text ) ->
-   chrome.tabs.query ( active: true ), ( tabs ) ->
-      if tabs.length > 0
+   getSelectedTab ( tab ) ->
 
-         user = stocking.Utils.getUser( )
-         if not user?
-            # ユーザーが設定されていない場合はオプションページに飛ばす
-            url = 'chrome-extension://' + chrome.runtime.id + '/html/option.html'
+      user = stocking.Utils.getUser( )
+      if not user?
+         # ユーザーが設定されていない場合はオプションページに飛ばす
+         url = 'chrome-extension://' + chrome.runtime.id + '/html/option.html'
+      else
+         stock = stocking.Stocks.getByTitle text
+         if stock?
+            url = stock.url
          else
-            stock = stocking.Stocks.getByTitle text
-            if stock?
-               url = stock.url
+            # ストック出ない場合はQiita.comのページに飛ばす
+            if text.length > 0
+               url = 'http://qiita.com/search?stocked=1&q=' + text
             else
-               # ストック出ない場合はQiita.comのページに飛ばす
-               if text.length > 0
-                  url = 'http://qiita.com/search?stocked=1&q=' + text
-               else
-                  url = "http://qiita.com/#{user}"
+               url = "http://qiita.com/#{user}"
 
-         chrome.tabs.update tabs[ 0 ].id, ( url: url )
+      chrome.tabs.update tab.id, ( url: url )

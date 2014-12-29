@@ -1,12 +1,12 @@
 'use strict'
 
-# 指定ページのストックをDLします
+# ストックをDLするクラス
 class StockDownloader
 
-   @start: ( page, callback, requestInstance = new stocking.Request ) ->
+   @start: ( callback, requestInstance = new stocking.Request ) ->
 
       # ETagを積極的に使う
-      etagKey = "etag-page-#{page}"
+      etagKey = "etag-v1"
       chrome.storage.local.get etagKey, ( read ) ->
 
          if stocking.Utils.hasApiError( )
@@ -16,44 +16,42 @@ class StockDownloader
 
          user = stocking.Utils.getUser( )
          unless user?
-            setTimeout ( -> callback page, null ), 0
+            setTimeout ( -> callback null ), 0
             return
 
-         url  = stocking.config.Static.StocksApi.replace ':user_id', user
-         params = ( page: page, per_page: stocking.config.Static.StocksPerRequest )
+         url = stocking.config.Static.StocksApi.replace ':user_id', user
 
          requestInstance.setHeader 'If-None-Match', etag
-         requestInstance.start url, params, ( response ) ->
+         requestInstance.start url, { }, ( response ) ->
 
             if response.status is 200
 
                try
-                  stocks = JSON.parse response.text
-
-                  # 本文は使わない上にデカイので消しておく
-                  for s in stocks
-                     delete s.rendered_body
-                     delete s.body
+                  stocks = [ ]
+                  for s in JSON.parse response.text
+                     stock = ( title: s.title, url: s.url, tags: [ ] )
+                     ( stock.tags.push ( name: t.name ) ) for t in s.tags
+                     stocks.push stock
                catch e
-                  callback page, null
+                  callback null
                   return
 
                # ETagとレスポンスを保存. ETagとレスポンスは, 不整合が起きないよう必ず同時で
-               set = { }
-               set[ "etag-page-#{page}" ] = response.getHeader "ETag"
-               set[ "response-page-#{page}" ] = JSON.stringify stocks # 本文を消した状態のオブジェクトを保存
-               chrome.storage.local.set set
+               set =
+                  'etag-v1'     : response.getHeader 'ETag'
+                  'response-v1' : JSON.stringify stocks
 
-               callback page, stocks
+               chrome.storage.local.set set
+               callback stocks
 
             else if response.status is 304
                # ETagに変更がないならローカルに保存してあるレスポンスを返却
-               chrome.storage.local.get "response-page-#{page}", ( read ) ->
-                  if stocking.Utils.hasApiError( ) or not read[ "response-page-#{page}" ]?
-                     callback page, null
+               chrome.storage.local.get "response-v1", ( read ) ->
+                  if stocking.Utils.hasApiError( ) or not read[ "response-v1" ]?
+                     callback null
                   else
-                     callback page, JSON.parse( read[ "response-page-#{page}" ] )
+                     callback JSON.parse( read[ 'response-v1' ] )
             else
-               callback page, null
+               callback null
 
 define 'stocking', StockDownloader

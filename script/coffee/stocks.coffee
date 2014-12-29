@@ -28,36 +28,21 @@ class Stocks
 
    @update: ( needNotifying = false, completedCallback = null ) ->
       currentUser = stocking.Utils.getUser( )
+      stocking.StockDownloader.start ( stocks ) ->
+         if stocks? and currentUser is stocking.Utils.getUser( )
+            _stocks = ( ( url: s.url, title: s.title, tags: ( t.name for t in s.tags ) ) for s in stocks )
+            chrome.storage.local.set ( stocks: _stocks )
+            Stocks.notifyFirstUpdated currentUser if needNotifying
 
-      acc = [ ]
-      callback = ( page, stocks ) ->
-         if stocks?
-            for s in stocks
-               acc.push ( url: s.url, title: s.title, tags: ( t.name for t in s.tags ) )
+         completedCallback( ) if completedCallback?
 
-            if stocks.length is stocking.config.Static.StocksPerRequest
-               stocking.StockDownloader.start page + 1, callback
-            else
-               # APIの更新は時間がかかるため, updateが呼ばれて更新を行っている間にユーザー名が変更される可能性がある
-               # そのためupdate呼び出し時のユーザー名と比較し, 等しい場合だけストックを更新する
-               if currentUser is stocking.Utils.getUser( )
-                  _stocks = acc
-                  chrome.storage.local.set ( stocks: _stocks )
-
-                  if needNotifying
-                     chrome.notifications.create 'stocks-updated', (
-                        type    : 'basic'
-                        iconUrl : '/resource/icon128.png'
-                        title   : 'ストック更新完了のお知らせ'
-                        message : currentUser + 'さんのストックの初期設定が完了しました'
-                     ), ( -> )
-
-                  completedCallback( ) if completedCallback?
-
-         else
-            completedCallback( ) if completedCallback? # null(失敗)だった場合は中断
-
-      stocking.StockDownloader.start 1, callback
+   @notifyFirstUpdated: ( name ) ->
+      chrome.notifications.create 'stocks-updated', (
+         type    : 'basic'
+         iconUrl : '/resource/icon128.png'
+         title   : 'ストック更新完了のお知らせ'
+         message : name + 'さんのストックの初期設定が完了しました'
+      ), ( -> )
 
    @getAll: ( ) -> s for s in _stocks
 

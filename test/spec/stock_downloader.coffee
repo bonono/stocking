@@ -3,7 +3,6 @@
 defineAs 'stocking', 'config', 'Static', (
    StocksApi        : 'http://test/:user_id/stocks'
    UserIdKey        : 'user'
-   StocksPerRequest : 20
 )
 
 describe 'stocking.StockDownloaderクラスのテスト', ( done ) ->
@@ -20,18 +19,24 @@ describe 'stocking.StockDownloaderクラスのテスト', ( done ) ->
       mock = new mocks.MockXMLHttpRequest
       req  = new stocking.Request mock
 
-      stocking.StockDownloader.start 1, ( page, stocks ) ->
-         expect( page ).toBe 1
-         expect( stocks ).toEqual [ 'A', 'B', 'C' ]
+      stocking.StockDownloader.start ( stocks ) ->
+         expect( stocks ).toEqual [
+            ( title: 't1', url: 'u1', tags: [ ( name: 'tag1' ) ] )
+            ( title: 't2', url: 'u2', tags: [ ( name: 'tag2' ) ] )
+            ( title: 't3', url: 'u3', tags: [ ( name: 'tag3' ) ] )
+         ]
          expect( mock.getUrl( ).split( '?' )[ 0 ] ).toBe 'http://test/testuser/stocks'
-         expect( mock.getUrl( ).split( '?' )[ 1 ].split '&' ).toEqual [ 'page=1', 'per_page=20' ] # パラメータの順番が違っても通るように
          done( )
       , req
 
       expect( mock.getRequestHeader 'If-None-Match' ).toBe ''
 
       mock.setStatus 200
-      mock.setResponse JSON.stringify( [ 'A', 'B', 'C' ] )
+      mock.setResponse JSON.stringify( [
+         ( title: 't1', url: 'u1', tags: [ ( dummy: 'd1', name: 'tag1' ) ] )
+         ( title: 't2', url: 'u2', tags: [ ( dummy: 'd2', name: 'tag2' ) ] )
+         ( title: 't3', url: 'u3', tags: [ ( name: 'tag3' ) ] )
+      ] )
       mock.resume 50
 
    it 'ETag付き', ( done ) ->
@@ -39,19 +44,24 @@ describe 'stocking.StockDownloaderクラスのテスト', ( done ) ->
       mock = new mocks.MockXMLHttpRequest
       req  = new stocking.Request mock
 
-      data = { }
-      data[ 'etag-page-1' ] = 'foobar1234'
-      chrome.storage.local.setDirect data
+      chrome.storage.local.setDirect 'etag-v1': 'foobar1234'
 
-      stocking.StockDownloader.start 1, ( page, stocks ) ->
-         expect( page ).toBe 1
-         expect( stocks ).toEqual [ 'A', 'B', 'C' ]
+      stocking.StockDownloader.start ( stocks ) ->
+         expect( stocks ).toEqual [
+            ( title: 't1', url: 'u1', tags: [ ( name: 'tag1' ) ] )
+            ( title: 't2', url: 'u2', tags: [ ( name: 'tag2' ) ] )
+            ( title: 't3', url: 'u3', tags: [ ( name: 'tag3' ) ] )
+         ]
          expect( mock.getRequestHeader 'If-None-Match' ).toBe 'foobar1234'
          done( )
       , req
 
       mock.setStatus 200
-      mock.setResponse JSON.stringify( [ 'A', 'B', 'C' ] )
+      mock.setResponse JSON.stringify( [
+         ( title: 't1', url: 'u1', tags: [ ( dummy: 'd1', name: 'tag1' ) ] )
+         ( title: 't2', url: 'u2', tags: [ ( dummy: 'd2', name: 'tag2' ) ] )
+         ( title: 't3', url: 'u3', tags: [ ( name: 'tag3' ) ] )
+      ] )
       mock.resume 50
 
    it 'ETag付き(エラー)', ( done ) ->
@@ -59,20 +69,25 @@ describe 'stocking.StockDownloaderクラスのテスト', ( done ) ->
       mock = new mocks.MockXMLHttpRequest
       req  = new stocking.Request mock
 
-      data = { }
-      data[ 'etag-page-1' ] = 'foobar1234'
-      chrome.storage.local.setDirect data
+      chrome.storage.local.setDirect 'etag-v1': 'foobar1234'
 
       chrome.storage.local.raiseErrorNext( )
-      stocking.StockDownloader.start 1, ( page, stocks ) ->
-         expect( page ).toBe 1
-         expect( stocks ).toEqual [ 'A', 'B', 'C' ]
+      stocking.StockDownloader.start ( stocks ) ->
+         expect( stocks ).toEqual [
+            ( title: 't1', url: 'u1', tags: [ ( name: 'tag1' ) ] )
+            ( title: 't2', url: 'u2', tags: [ ( name: 'tag2' ) ] )
+            ( title: 't3', url: 'u3', tags: [ ( name: 'tag3' ) ] )
+         ]
          expect( mock.getRequestHeader 'If-None-Match' ).toBe ''
          done( )
       , req
 
       mock.setStatus 200
-      mock.setResponse JSON.stringify( [ 'A', 'B', 'C' ] )
+      mock.setResponse JSON.stringify( [
+         ( title: 't1', url: 'u1', tags: [ ( dummy: 'd1', name: 'tag1' ) ] )
+         ( title: 't2', url: 'u2', tags: [ ( dummy: 'd2', name: 'tag2' ) ] )
+         ( title: 't3', url: 'u3', tags: [ ( name: 'tag3' ) ] )
+      ] )
       mock.resume 50
 
    it 'ETag返却(status: 200)', ( done ) ->
@@ -80,20 +95,30 @@ describe 'stocking.StockDownloaderクラスのテスト', ( done ) ->
       mock = new mocks.MockXMLHttpRequest
       req  = new stocking.Request mock
 
-      stocking.StockDownloader.start 1, ( page, stocks ) ->
-         expect( page ).toBe 1
-         expect( stocks ).toEqual [ 'A', 'B', 'C' ]
+      stocking.StockDownloader.start ( stocks ) ->
+         expect( stocks ).toEqual [
+            ( title: 't1', url: 'u1', tags: [ ( name: 'tag1' ) ] )
+            ( title: 't2', url: 'u2', tags: [ ( name: 'tag2' ) ] )
+            ( title: 't3', url: 'u3', tags: [ ( name: 'tag3' ) ] )
+         ]
          expect( mock.getRequestHeader 'If-None-Match' ).toBe ''
-
          setTimeout ( ->
-            expect( chrome.storage.local.getDirect 'etag-page-1' ).toBe 'hogehoge'
-            expect( chrome.storage.local.getDirect 'response-page-1' ).toBe JSON.stringify( [ 'A', 'B', 'C' ] )
+            expect( chrome.storage.local.getDirect 'etag-v1' ).toBe 'hogehoge'
+            expect( chrome.storage.local.getDirect 'response-v1' ).toBe JSON.stringify( [
+               ( title: 't1', url: 'u1', tags: [ ( name: 'tag1' ) ] )
+               ( title: 't2', url: 'u2', tags: [ ( name: 'tag2' ) ] )
+               ( title: 't3', url: 'u3', tags: [ ( name: 'tag3' ) ] )
+            ] )
             done( )
          ), 10
       , req
 
       mock.setStatus 200
-      mock.setResponse JSON.stringify( [ 'A', 'B', 'C' ] )
+      mock.setResponse JSON.stringify( [
+         ( title: 't1', url: 'u1', tags: [ ( dummy: 'd1', name: 'tag1' ) ] )
+         ( title: 't2', url: 'u2', tags: [ ( dummy: 'd2', name: 'tag2' ) ] )
+         ( title: 't3', url: 'u3', tags: [ ( name: 'tag3' ) ] )
+      ] )
       mock.setResponseHeader 'ETag', 'hogehoge'
       mock.resume 50
 
@@ -102,19 +127,31 @@ describe 'stocking.StockDownloaderクラスのテスト', ( done ) ->
       mock = new mocks.MockXMLHttpRequest
       req  = new stocking.Request mock
 
-      data = { }
-      data[ 'etag-page-1' ] = 'old'
-      data[ 'response-page-1' ] = JSON.stringify( [ 'A', 'B', 'C' ] )
+      data =
+         'etag-v1' : 'old'
+         'response-v1' : JSON.stringify( [
+               ( title: 't1', url: 'u1', tags: [ ( name: 'tag1' ) ] )
+               ( title: 't2', url: 'u2', tags: [ ( name: 'tag2' ) ] )
+               ( title: 't3', url: 'u3', tags: [ ( name: 'tag3' ) ] )
+         ] )
+
       chrome.storage.local.setDirect data
 
-      stocking.StockDownloader.start 1, ( page, stocks ) ->
-         expect( page ).toBe 1
-         expect( stocks ).toEqual [ 'A', 'B', 'C' ]
+      stocking.StockDownloader.start ( stocks ) ->
+         expect( stocks ).toEqual [
+            ( title: 't1', url: 'u1', tags: [ ( name: 'tag1' ) ] )
+            ( title: 't2', url: 'u2', tags: [ ( name: 'tag2' ) ] )
+            ( title: 't3', url: 'u3', tags: [ ( name: 'tag3' ) ] )
+         ]
          expect( mock.getRequestHeader 'If-None-Match' ).toBe 'old'
 
          setTimeout ( ->
-            expect( chrome.storage.local.getDirect 'etag-page-1' ).toBe 'old'
-            expect( stocks ).toEqual  [ 'A', 'B', 'C' ] 
+            expect( chrome.storage.local.getDirect 'etag-v1' ).toBe 'old'
+            expect( chrome.storage.local.getDirect 'response-v1' ).toBe JSON.stringify( [
+               ( title: 't1', url: 'u1', tags: [ ( name: 'tag1' ) ] )
+               ( title: 't2', url: 'u2', tags: [ ( name: 'tag2' ) ] )
+               ( title: 't3', url: 'u3', tags: [ ( name: 'tag3' ) ] )
+            ] )
             done( )
          ), 10
       , req
@@ -128,14 +165,31 @@ describe 'stocking.StockDownloaderクラスのテスト', ( done ) ->
       mock = new mocks.MockXMLHttpRequest
       req  = new stocking.Request mock
 
-      stocking.StockDownloader.start 1, ( page, stocks ) ->
-         expect( page ).toBe 1
+      data =
+         'etag-v1' : 'old'
+         'response-v1' : JSON.stringify( [
+               ( title: 't1', url: 'u1', tags: [ ( name: 'tag1' ) ] )
+               ( title: 't2', url: 'u2', tags: [ ( name: 'tag2' ) ] )
+               ( title: 't3', url: 'u3', tags: [ ( name: 'tag3' ) ] )
+         ] )
+
+      chrome.storage.local.setDirect data
+
+      stocking.StockDownloader.start ( stocks ) ->
          expect( stocks ).toBeNull( )
-         done( )
+         setTimeout ( ->
+            expect( chrome.storage.local.getDirect 'etag-v1' ).toBe 'old'
+            expect( chrome.storage.local.getDirect 'response-v1' ).toBe JSON.stringify( [
+               ( title: 't1', url: 'u1', tags: [ ( name: 'tag1' ) ] )
+               ( title: 't2', url: 'u2', tags: [ ( name: 'tag2' ) ] )
+               ( title: 't3', url: 'u3', tags: [ ( name: 'tag3' ) ] )
+            ] )
+            done( )
+         ), 10
       , req
 
       mock.setStatus 500
-      mock.setResponse JSON.stringify( [ 'A', 'B', 'C' ] )
+      mock.setResponse 'ERROR'
       mock.resume 50
 
    it 'ユーザー設定なし状態でのテスト', ( done ) ->
@@ -144,8 +198,7 @@ describe 'stocking.StockDownloaderクラスのテスト', ( done ) ->
       req  = new stocking.Request mock
 
       chrome.storage.local.clear( )
-      stocking.StockDownloader.start 1, ( page, stocks ) ->
-         expect( page ).toBe 1
+      stocking.StockDownloader.start ( stocks ) ->
          expect( stocks ).toBeNull( )
          done( )
       , req

@@ -3,6 +3,7 @@
    "description"      : "Qiitaでストックした記事をChromeの検索バーから検索できるようにするChrome拡張",
    "version"          : "0.4",
    "manifest_version" : 2,
+   "minimum_chrome_version": "35",
    "omnibox": {
       "keyword": "q"
    },

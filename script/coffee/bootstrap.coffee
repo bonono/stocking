@@ -45,8 +45,11 @@ chrome.omnibox.onInputChanged.addListener ( text, suggest ) ->
 
    suggested = [ ]
    for stock in matched
-      description = stock.title.replace new RegExp( text, 'i' ), ( m ) -> "<match>#{m}</match>"
-      description += " - <dim>" + stock.tags.join( ", " ) + "</dim>" if stock.tags.length > 0
+      if stocking.Utils.needEscape stock.title
+         description = stocking.Utils.escape stock.title # 処理が面倒になるので, エスケープが必要なタイトルはmatchタグで囲わずエスケープだけ行う
+      else
+         description = stock.title.replace new RegExp( text, 'i' ), ( m ) -> "<match>#{m}</match>"
+      description += " - <dim>" + stock.tags.map( stocking.Utils.escape ).join( ", " ) + "</dim>" if stock.tags.length > 0
 
       suggested.push (
          content     : stock.title

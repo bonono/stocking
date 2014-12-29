@@ -14,4 +14,10 @@ class Utils
    @hasApiError: ( ) ->
       chrome.runtime.lastError? and chrome.runtime.lastError isnt ''
 
+   @needEscape: ( str ) -> ( /["\'\<\>&]/g ).test str
+
+   @escape: ( str ) ->
+      specialChars = ( '"': '&quot;', '\'': '&apos;', '<': '&lt;', '>': '&gt;', '&': '&amp;' )
+      return str.replace( /["\'\<\>&]/g, ( m ) -> specialChars[ m ] )
+
 define 'stocking', Utils
